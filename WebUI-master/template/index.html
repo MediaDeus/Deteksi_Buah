@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <title>Halaman Utama</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script>
+		$(function() {
+		
+			$("#buah").change(function() {
+				$("#model").load("static/textdata/" + $(this).val() + ".txt");
+			});
+		});
+	</script>
+</head>
+
+<body>
+    <div class="w3-container w3-cell-row main_home w3-padding">
+        <div class="w3-container w3-cell-row title">
+            <h1>Deteksi Buah-Buahan</h1>
+        </div>
+        <hr>
+        <div class="w3-container w3-cell-row">
+            <div class="w3-container w3-cell w3-third w3-mobile">
+                <h2>Pilih Gambar</h2>
+                <div class="w3-margin w3-cell-row w3-container buah-selector">
+                    <div class="w3-cell" style="position: relative;">
+                        <label for="buah">Pilih Buah: </label>
+                    </div>
+                    <div class="w3-cell select">
+                        <select name="buah" id="buah">
+                            <option selected value="base">Pilih</option>
+			                <option value="Jeruk">Jeruk</option>
+			                <option value="Mangga">Mangga</option>
+                            <option value="Pepaya">Pepaya</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w3-margin w3-cell-row w3-container model-selector">
+                    <div class="w3-cell" style="position: relative;">
+                        <label for="model">Pilih model: </label>
+                    </div>
+                    <div class="w3-cell select">
+                        <select name="model" id="model">
+                            <option>Pilih</option>
+                        </select>
+                    </div>
+                    <div class="w3-cell">
+                        <i class="fa fa-exclamation" id="model-loader"></i>
+                    </div>
+                    <div class="w3-cell">
+                        <button class="buttonb-small" id="choose_model" onclick="choose_model()"
+                            type="button">Pilih</button>
+                    </div>
+                </div>
+                <div class="w3-cell-row w3-border w3-round-xlarge" style="overflow: hidden;">
+                    <img id="input-img" src="../static/picture/img_placeholder.png" alt="input image" class="input_pic" />
+                </div>
+                <div class="w3-container w3-cell-row button_section">
+                    <div class="w3-cell-row w3-padding">
+                        <label for="image-input" class="image-input w3-cell" id='image-input-button'>
+                            Pilih File
+                        </label>
+                        <input class="input-file" type="file" name="file" id="image-input" accept="image/*">
+                        <button id="submit" onclick="upload_file()" type="button"
+                            class="buttonb w3-cell">Submit</button>
+                    </div>
+                    <div class="w3-cell-row w3-padding">
+                        <button class="w3-button w3-cell-row w3-blue detect" onclick="detect_image()">Deteksi</button>
+                        <p class="selected-model" id="selected-model">model belum dipilih!</p>
+                    </div>
+                    <div class="w3-cell-row" id="conf_control">
+                        <h5>Minimum Confidence Level</h5>
+                        <div class="w3-row" style="width: 75%;" id="BuahMatang_conf_container">
+                            <label for="BuahMatang_conf" class="w3-quarter">Buah Matang</label>
+                            <input class="w3-half" type="range" min="10" max="100" value="70" id="BuahMatang_conf" name="BuahMatang_conf"
+                                oninput="sliderValue(this)">
+                            <label class="w3-quarter" id="BuahMatang_conf_val">0.7</label>
+                        </div>
+                        <div class="w3-row" style="width: 75%;" id="BuahTidakMatang_conf_container">
+                            <label for="BuahTidakMatang_conf" class="w3-quarter">Buah Tidak Matang</label>
+                            <input class="w3-half" type="range" min="10" max="100" value="70" id="BuahTidakMatang_conf" name="BuahTidakMatang_conf"
+                                oninput="sliderValue(this)">
+                            <label class="w3-quarter" id="BuahTidakMatang_conf_val">0.7</label>
+                        </div>
+                        <div class="w3-row w3-padding"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-container w3-cell w3-twothird w3-leftbar w3-mobile hasil_keluaran">
+                <div class="w3-cell-row">
+                    <div class="w3-cell image-container">
+                        <span>
+                            <h2>Hasil Deteksi</h2>
+                        </span>
+                        <div class="w3-border w3-round-xlarge" style="position: relative; overflow: hidden;">
+                            <div class="loader-container" id='loader-container'>
+                                <div class="loader"></div>
+                            </div>
+                            <img class="output-img" src="../static/picture/img_placeholder.png" id="detection"
+                                alt="output-img" />
+                        </div>
+                    </div>
+                </div>
+                <div class="result-data w3-container w3-padding" id="detect_result">
+                    <div class="w3-quarter">
+                        <div class="w3-margin"><span class="data-name">Total: </span> <span
+                                id="detect-total"></span></div>
+                        <div class="w3-margin" id="detect-BuahMatang-container"><span class="data-name">Buah Matang: </span> <span
+                                id="detect-BuahMatang"></span></div>
+                        <div class="w3-margin" id="detect-BuahTidakMatang-container"><span class="data-name">Buah Tidak Matang: </span> <span
+                                id="detect-BuahTidakMatang"></span></div>
+                    </div>
+                    <div class="w3-threequarter">
+                        <div id="result-graph"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+
+</html>
