@@ -1,13 +1,14 @@
-# Repositori Skripsi Deteksi Buah
+# Fruit Detection Thesis Repository
 
-Repositori ini berisi kode program untuk pengerjaan skripsi yang berfokus pada deteksi buah. Repositori ini dibagi menjadi dua komponen utama:
+This repository contains the source code for a thesis project focusing on fruit detection. This repository is divided into two main components:
 
-## 📂 WebUI-master
+## WebUI-master
 
-Folder ini berisi *Graphical User Interface* (GUI) untuk aplikasi skripsi. Di dalam folder ini juga sudah terdapat model yang telah dilatih (*trained model*) untuk mendeteksi dua jenis buah:
-* Buah Jeruk
-* Buah Mangga
+This folder contains the *Graphical User Interface* (GUI) for the thesis application. Inside this folder, there is also a *trained model* for detecting two types of fruits:
 
-## 📂 keras-retinanet
+* Oranges
+* Mangoes
 
-Folder ini berisi kode program inti yang digunakan untuk proses *training* (pelatihan) model. Kode di sini dipakai untuk membuat model deteksi dari awal berdasarkan dataset yang telah disiapkan.
+## keras-retinanet
+
+This folder contains the core source code used for the model *training* process. The code here is used to build a detection model from scratch based on a prepared dataset.
